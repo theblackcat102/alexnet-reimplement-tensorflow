@@ -44,19 +44,28 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
                 pbar.set_description('loss: %.4f, train_acc: %.4f' % (
                     loss, train_acc))
                 pbar.update(1)
-
+                break
                 # train_summary = tf.Summary()
                 # train_summary.value.add(tag="loss", simple_value=loss)
                 # train_writer.add_summary(train_summary, step_counter)
         
         y_pred = []
+        total_loss = 0
+        for x_batch, y_batch in train:
+            output, loss = model.predict(x_batch, y_batch)
+            y_pred.append(output.flatten())
+            total_loss += loss * len(x_batch)
+        train_acc = accuracy_score(train.y, np.concatenate(y_pred))
+        total_loss /= len(train.X)
+
+        y_pred = []
         for x_batch, y_batch in test:
-            output = model.predict(x_batch)
+            output, _ = model.predict(x_batch, y_batch)
             y_pred.append(output.flatten())
         test_acc = accuracy_score(test.y, np.concatenate(y_pred))
 
         print('Epoch %2d/%2d, loss: %.4f, train_acc: %.4f, test_acc: %.4f' % (
-            epoch + 1, epochs, loss, train_acc, test_acc))
+            epoch + 1, epochs, total_loss, train_acc, test_acc))
 
 if __name__ == "__main__":
     train(

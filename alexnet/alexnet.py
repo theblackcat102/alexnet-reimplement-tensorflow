@@ -17,38 +17,38 @@ class AlexNet(object):
         self.num_classes = num_classes
         
         # Convolution 1
-        x = self.conv2d(self.x, 96, [3, 3], [1, 1], split=split)
+        x = self.conv2d(self.x, 48, [3, 3], [1, 1], split=split)
         x = self.relu(x)
         x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
         x = self.maxpool(x, [3, 3], [2, 2])
         
         # Convolution 2
-        x = self.conv2d(x, 256, [3, 3], [1, 1], split=split)
+        x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
         x = self.relu(x)
         x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
         x = self.maxpool(x, [3, 3], [2, 2])
 
         # Convolution 3
-        x = self.conv2d(x, 384, [3, 3], [1, 1], split=False)
+        x = self.conv2d(x, 192, [3, 3], [1, 1], split=False)
         x = self.relu(x)
 
         # Convolution 4
-        x = self.conv2d(x, 384, [3, 3], [1, 1], split=split)
+        x = self.conv2d(x, 192, [3, 3], [1, 1], split=split)
         x = self.relu(x)
 
         # Convolution 5
-        x = self.conv2d(x, 256, [3, 3], [1, 1], split=split)
+        x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
         x = self.relu(x)
         x = self.maxpool(x, [3, 3], [2, 2])
 
         # Fully Connected 6
         x = tf.layers.Flatten()(x)
-        x = self.dense(x, 4096)
+        x = self.dense(x, 2048)
         x = self.dropout(x, rate=self.dropout_rate)
         x = self.relu(x)
 
         # Fully Connected 7
-        x = self.dense(x, 4096)
+        x = self.dense(x, 2048)
         x = self.dropout(x, rate=self.dropout_rate)
         x = self.relu(x)
 
@@ -109,6 +109,10 @@ class AlexNet(object):
         _, output, loss = self.sess.run(fetches, feed_dict=feed_dict)
         return loss, output
     
-    def predict(self, x):
-        output = self.sess.run(self.output, feed_dict={self.x: x})
-        return output
+    def predict(self, x, y):
+        fetches = [
+            self.output,
+            self.loss,
+        ]
+        output, loss = self.sess.run(fetches, feed_dict={self.x: x, self.y: y})
+        return output, loss
