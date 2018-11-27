@@ -43,12 +43,12 @@ class AlexNet(object):
 
         # Fully Connected 6
         x = tf.layers.Flatten()(x)
-        x = self.dense(x, 2048)
+        x = self.dense(x, 1024)
         x = self.dropout(x, rate=self.dropout_rate)
         x = self.relu(x)
 
         # Fully Connected 7
-        x = self.dense(x, 2048)
+        x = self.dense(x, 1024)
         x = self.dropout(x, rate=self.dropout_rate)
         x = self.relu(x)
 
