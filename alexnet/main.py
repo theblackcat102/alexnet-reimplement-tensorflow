@@ -49,19 +49,23 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
                 # train_writer.add_summary(train_summary, step_counter)
         
         y_pred = []
+        y_true = []
         total_loss = 0
         for x_batch, y_batch in train:
             output, loss = model.predict(x_batch, y_batch)
             y_pred.append(output.flatten())
+            y_true.append(y_batch)
             total_loss += loss * len(x_batch)
-        train_acc = accuracy_score(train.y, np.concatenate(y_pred))
+        train_acc = accuracy_score(np.concatenate(y_true), np.concatenate(y_pred))
         total_loss /= len(train.X)
 
         y_pred = []
+        y_true = []
         for x_batch, y_batch in test:
             output, _ = model.predict(x_batch, y_batch)
             y_pred.append(output.flatten())
-        test_acc = accuracy_score(test.y, np.concatenate(y_pred))
+            y_true.append(y_batch)
+        test_acc = accuracy_score(np.concatenate(y_true), np.concatenate(y_pred))
 
         print('Epoch %2d/%2d, loss: %.4f, train_acc: %.4f, test_acc: %.4f' % (
             epoch + 1, epochs, total_loss, train_acc, test_acc))
