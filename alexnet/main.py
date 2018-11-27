@@ -9,19 +9,6 @@ from alexnet.alexnet import AlexNet
 from alexnet.utils import Dataset
 
 
-def batch_gen(X, y, batch_size, shuffle=True):
-    assert(X.shape[0] == y.shape[0])
-    indices = np.arange(len(X))
-    if shuffle:
-        np.random.shuffle(indices)
-    start_index = 0
-    while start_index < len(X):
-        index = indices[start_index: start_index + batch_size]
-        X_batch = X[index]
-        y_batch = y[index]
-        start_index += batch_size
-        yield X_batch, y_batch
-
 def train(epochs, batch_size, learning_rate, dropout_rate):
     (x_train, y_train), (x_test, y_test) = cifar100.load_data()
     train = Dataset(
@@ -64,10 +51,7 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
         
         y_pred = []
         for x_batch, y_batch in test:
-            output = model.predict({
-                model.x: x_batch,
-                model.y: y_batch,
-            })
+            output = model.predict(x_batch)
             y_pred.extend(output.flatten())
         test_acc = accuracy_score(test.y, np.concatenate(y_pred))
 
@@ -77,6 +61,6 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
 if __name__ == "__main__":
     train(
         epochs=50,
-        batch_size=256,
+        batch_size=128,
         learning_rate=0.001,
         dropout_rate=0.5)

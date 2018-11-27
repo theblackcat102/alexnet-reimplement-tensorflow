@@ -17,13 +17,13 @@ class AlexNet(object):
         self.num_classes = num_classes
         
         # Convolution 1
-        x = self.conv2d(self.x, 96, [11, 11], [4, 4], split=split)
+        x = self.conv2d(self.x, 96, [3, 3], [1, 1], split=split)
         x = self.relu(x)
         x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
         x = self.maxpool(x, [3, 3], [2, 2])
         
         # Convolution 2
-        x = self.conv2d(x, 256, [5, 5], [1, 1], split=split)
+        x = self.conv2d(x, 256, [3, 3], [1, 1], split=split)
         x = self.relu(x)
         x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
         x = self.maxpool(x, [3, 3], [2, 2])
