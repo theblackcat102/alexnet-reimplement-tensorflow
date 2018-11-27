@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from tqdm import tqdm
 from sklearn.metrics import accuracy_score
-from keras.datasets import cifar100
+from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 
 from alexnet.alexnet import AlexNet
@@ -10,7 +10,7 @@ from alexnet.utils import Dataset
 
 
 def train(epochs, batch_size, learning_rate, dropout_rate):
-    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     train = Dataset(
         X=x_train.reshape(-1, 32, 32, 3) / 255,
         y=y_train.flatten(), batch_size=batch_size)

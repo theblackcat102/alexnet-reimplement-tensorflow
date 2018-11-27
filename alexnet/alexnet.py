@@ -9,7 +9,7 @@ class AlexNet(object):
             self,
             learning_rate=0.001,
             input_shape=(32, 32, 3),
-            num_classes=100,
+            num_classes=10,
             split=False):
         self.x = tf.placeholder(tf.float32, shape=[None, *input_shape])
         self.y = tf.placeholder(tf.int32, shape=[None])
