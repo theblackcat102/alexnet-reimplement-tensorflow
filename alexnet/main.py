@@ -44,7 +44,6 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
                 pbar.set_description('loss: %.4f, train_acc: %.4f' % (
                     loss, train_acc))
                 pbar.update(1)
-                break
                 # train_summary = tf.Summary()
                 # train_summary.value.add(tag="loss", simple_value=loss)
                 # train_writer.add_summary(train_summary, step_counter)
