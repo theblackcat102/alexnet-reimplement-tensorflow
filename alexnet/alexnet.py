@@ -113,5 +113,5 @@ class AlexNet(object):
         fetches = [
             self.output,
         ]
-        output = self.sess.run(fetches, feed_dict={self.x: x})
+        output, = self.sess.run(fetches, feed_dict={self.x: x})
         return output
