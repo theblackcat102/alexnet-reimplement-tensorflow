@@ -110,8 +110,5 @@ class AlexNet(object):
         return loss, output
     
     def predict(self, x):
-        fetches = [
-            self.output,
-        ]
-        output, = self.sess.run(fetches, feed_dict={self.x: x})
+        output = self.sess.run(self.output, feed_dict={self.x: x})
         return output
