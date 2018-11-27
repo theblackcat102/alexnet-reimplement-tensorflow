@@ -42,7 +42,7 @@ class AlexNet(object):
         x = self.maxpool(x, [3, 3], [2, 2])
 
         # Fully Connected 6
-        x = tf.layers.Flatten(x)
+        x = tf.layers.Flatten()(x)
         x = self.dense(x, 4096)
         x = self.dropout(x, rate=self.dropout_rate)
         x = self.relu(x)
@@ -57,7 +57,7 @@ class AlexNet(object):
 
         self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(
             labels=tf.one_hot(self.y, depth=num_classes), logits=x))
-        self.train_op = tf.train.AdamOptimizer(learning_rate).minimize(loss)
+        self.train_op = tf.train.AdamOptimizer(learning_rate).minimize(self.loss)
         self.output = tf.argmax(x, axis=-1)
 
     def relu(self, x):
