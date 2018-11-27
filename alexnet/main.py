@@ -18,14 +18,11 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
         X=x_test.reshape(-1, 32, 32, 3) / 255,
         y=y_test.flatten(), batch_size=batch_size)
 
-    # datagen = ImageDataGenerator(
-    #     featurewise_center=True,
-    #     featurewise_std_normalization=True,
-    #     rotation_range=20,
-    #     width_shift_range=0.2,
-    #     height_shift_range=0.2,
-    #     horizontal_flip=True)
-    # datagen.fit(x_train)
+    datagen = ImageDataGenerator(
+        rotation_range=20,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        horizontal_flip=True)
 
     model = AlexNet(learning_rate=learning_rate)
     model.build()
@@ -34,7 +31,9 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
     # test_writer = tf.summary.FileWriter('./log/test')
     for epoch in range(epochs):
         with tqdm(total=len(train), ncols=120) as pbar:
-            for x_batch, y_batch in train:
+            for i, (x_batch, y_batch) in enumerate(datagen.flow(train.X, train.y, batch_size=batch_size)):
+                if i >= len(train):
+                    break
                 loss, output = model.train(feed_dict={
                     model.x: x_batch,
                     model.y: y_batch,
