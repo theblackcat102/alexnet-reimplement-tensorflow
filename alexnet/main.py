@@ -52,7 +52,7 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
         y_pred = []
         for x_batch, y_batch in test:
             output = model.predict(x_batch)
-            y_pred.extend(output.flatten())
+            y_pred.append(output.flatten())
         test_acc = accuracy_score(test.y, np.concatenate(y_pred))
 
         print('Epoch %2d/%2d, loss: %.4f, train_acc: %.4f, test_acc: %.4f' % (
