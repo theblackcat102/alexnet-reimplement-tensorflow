@@ -17,38 +17,31 @@ class AlexNet(object):
         self.num_classes = num_classes
         
         # Convolution 1
-        x = self.conv2d(self.x, 48, [3, 3], [1, 1], split=split)
-        x = self.relu(x)
+        x = self.conv2d(self.x, 32, [3, 3], [1, 1], split=split)
         x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-        x = self.maxpool(x, [3, 3], [2, 2])
-        
-        # Convolution 2
-        x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
         x = self.relu(x)
-        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-        x = self.maxpool(x, [3, 3], [2, 2])
 
-        # Convolution 3
-        x = self.conv2d(x, 192, [3, 3], [1, 1], split=False)
+        # Convolution 2
+        x = self.conv2d(self.x, 64, [3, 3], [1, 1], split=split)
+        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
         x = self.relu(x)
+        x = self.maxpool(x, [2, 2], [2, 2])
+        
+        # Convolution 3
+        x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
+        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+        x = self.relu(x)
+        x = self.maxpool(x, [2, 2], [2, 2])
 
         # Convolution 4
-        x = self.conv2d(x, 192, [3, 3], [1, 1], split=split)
-        x = self.relu(x)
-
-        # Convolution 5
         x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
+        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
         x = self.relu(x)
-        x = self.maxpool(x, [3, 3], [2, 2])
+        x = self.maxpool(x, [2, 2], [2, 2])
 
         # Fully Connected 6
         x = tf.layers.Flatten()(x)
-        x = self.dense(x, 1024)
-        x = self.dropout(x, rate=self.dropout_rate)
-        x = self.relu(x)
-
-        # Fully Connected 7
-        x = self.dense(x, 1024)
+        x = self.dense(x, 1500)
         x = self.dropout(x, rate=self.dropout_rate)
         x = self.relu(x)
 
