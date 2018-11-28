@@ -19,24 +19,24 @@ class AlexNet(object):
         with tf.variable_scope('feature_extraction'):
             # Convolution 1
             x = self.conv2d(self.x, 32, [3, 3], [1, 1], name='conv_1')
-            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
             x = self.relu(x)
 
             # Convolution 2
-            x = self.conv2d(self.x, 64, [3, 3], [1, 1], name='conv_2')
-            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.conv2d(x, 64, [3, 3], [1, 1], name='conv_2')
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
             x = self.relu(x)
             x = self.maxpool(x, [2, 2], [2, 2])
             
             # Convolution 3
             x = self.conv2d(x, 128, [3, 3], [1, 1], name='conv_3')
-            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
             x = self.relu(x)
             x = self.maxpool(x, [2, 2], [2, 2])
 
             # Convolution 4
             x = self.conv2d(x, 256, [3, 3], [1, 1], name='conv_4')
-            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
             x = self.relu(x)
             x = self.maxpool(x, [2, 2], [2, 2])
 
