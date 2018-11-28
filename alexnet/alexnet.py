@@ -14,31 +14,37 @@ class AlexNet(object):
         self.x = tf.placeholder(tf.float32, shape=[None, *input_shape])
         self.y = tf.placeholder(tf.int32, shape=[None])
         self.dropout_rate = tf.placeholder_with_default(0, shape=[])
+        self.dropout_rate_conv = tf.placeholder_with_default(0, shape=[])
         self.num_classes = num_classes
         
         with tf.variable_scope('feature_extraction'):
             # Convolution 1
-            x = self.conv2d(self.x, 32, [3, 3], [1, 1], name='conv_1')
+            # x = self.conv2d(self.x, 32, [3, 3], [1, 1], name='conv_1')
+            # x = self.relu(x)
             # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-            x = self.relu(x)
+            # x = self.maxpool(x, [3, 3], [2, 2])
+            # x = self.dropout(x, rate=self.dropout_rate_conv)
 
             # Convolution 2
-            x = self.conv2d(x, 64, [3, 3], [1, 1], name='conv_2')
-            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.conv2d(self.x, 64, [3, 3], [1, 1], name='conv_2')
             x = self.relu(x)
-            x = self.maxpool(x, [2, 2], [2, 2])
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.maxpool(x, [3, 3], [2, 2])
+            x = self.dropout(x, rate=self.dropout_rate_conv)
             
             # Convolution 3
             x = self.conv2d(x, 128, [3, 3], [1, 1], name='conv_3')
-            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
             x = self.relu(x)
-            x = self.maxpool(x, [2, 2], [2, 2])
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.maxpool(x, [3, 3], [2, 2])
+            x = self.dropout(x, rate=self.dropout_rate_conv)
 
             # Convolution 4
             x = self.conv2d(x, 256, [3, 3], [1, 1], name='conv_4')
-            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
             x = self.relu(x)
-            x = self.maxpool(x, [2, 2], [2, 2])
+            # x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.maxpool(x, [3, 3], [2, 2])
+            x = self.dropout(x, rate=self.dropout_rate_conv)
 
         with tf.variable_scope('fullyconnected'):
             # Fully Connected 5
