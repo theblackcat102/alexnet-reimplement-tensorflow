@@ -2,7 +2,7 @@
 
 ## Run
 
-- Train on CIFAR-100
+- Train on CIFAR-10
 
 ```shell
 $ python -m alexnet.main

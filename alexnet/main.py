@@ -27,8 +27,9 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
     model = AlexNet(learning_rate=learning_rate)
     model.build()
 
-    train_writer = tf.summary.FileWriter('./log/train', model.sess.graph)
-    test_writer = tf.summary.FileWriter('./log/test')
+    # train_writer = tf.summary.FileWriter('./log/train', model.sess.graph)
+    # test_writer = tf.summary.FileWriter('./log/test')
+    # saver = tf.train.Saver()
     step_counter = 0
     for epoch in range(epochs):
         with tqdm(total=len(train), ncols=120) as pbar:
@@ -46,9 +47,9 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
                     loss, train_acc))
                 pbar.update(1)
 
-                summary = tf.Summary()
-                summary.value.add(tag="loss", simple_value=loss)
-                train_writer.add_summary(summary, step_counter)
+                # summary = tf.Summary()
+                # summary.value.add(tag="loss", simple_value=loss)
+                # train_writer.add_summary(summary, step_counter)
         
         y_pred = []
         y_true = []
@@ -71,6 +72,15 @@ def train(epochs, batch_size, learning_rate, dropout_rate):
 
         print('Epoch %2d/%2d, loss: %.4f, train_acc: %.4f, test_acc: %.4f' % (
             epoch + 1, epochs, total_loss, train_acc, test_acc))
+
+    #     summary = tf.Summary()
+    #     summary.value.add(tag="accuracy", simple_value=train_acc)
+    #     train_writer.add_summary(summary, step_counter)
+
+    #     summary = tf.Summary()
+    #     summary.value.add(tag="accuracy", simple_value=test_acc)
+    #     test_writer.add_summary(summary, step_counter)
+    # saver.save(model.sess, save_path='log/model')
 
 if __name__ == "__main__":
     train(

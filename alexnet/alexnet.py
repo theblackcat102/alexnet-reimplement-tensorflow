@@ -16,42 +16,46 @@ class AlexNet(object):
         self.dropout_rate = tf.placeholder_with_default(0, shape=[])
         self.num_classes = num_classes
         
-        # Convolution 1
-        x = self.conv2d(self.x, 32, [3, 3], [1, 1], split=split)
-        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-        x = self.relu(x)
+        with tf.variable_scope('feature_extraction'):
+            # Convolution 1
+            x = self.conv2d(self.x, 32, [3, 3], [1, 1], name='conv_1')
+            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.relu(x)
 
-        # Convolution 2
-        x = self.conv2d(self.x, 64, [3, 3], [1, 1], split=split)
-        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-        x = self.relu(x)
-        x = self.maxpool(x, [2, 2], [2, 2])
-        
-        # Convolution 3
-        x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
-        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-        x = self.relu(x)
-        x = self.maxpool(x, [2, 2], [2, 2])
+            # Convolution 2
+            x = self.conv2d(self.x, 64, [3, 3], [1, 1], name='conv_2')
+            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.relu(x)
+            x = self.maxpool(x, [2, 2], [2, 2])
+            
+            # Convolution 3
+            x = self.conv2d(x, 128, [3, 3], [1, 1], name='conv_3')
+            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.relu(x)
+            x = self.maxpool(x, [2, 2], [2, 2])
 
-        # Convolution 4
-        x = self.conv2d(x, 128, [3, 3], [1, 1], split=split)
-        x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
-        x = self.relu(x)
-        x = self.maxpool(x, [2, 2], [2, 2])
+            # Convolution 4
+            x = self.conv2d(x, 256, [3, 3], [1, 1], name='conv_4')
+            x = self.lrn(x, radius=2, alpha=2e-5, beta=0.75)
+            x = self.relu(x)
+            x = self.maxpool(x, [2, 2], [2, 2])
 
-        # Fully Connected 6
-        x = tf.layers.Flatten()(x)
-        x = self.dense(x, 1500)
-        x = self.dropout(x, rate=self.dropout_rate)
-        x = self.relu(x)
+        with tf.variable_scope('fullyconnected'):
+            # Fully Connected 5
+            x = tf.layers.Flatten()(x)
+            x = self.dense(x, 128)
+            x = self.dropout(x, rate=self.dropout_rate)
+            x = self.relu(x)
 
-        # Output
-        x = self.dense(x, num_classes)
-
-        self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(
-            labels=tf.one_hot(self.y, depth=num_classes), logits=x))
+            # Output
+            x = self.dense(x, num_classes)
+            
+        with tf.variable_scope('loss'):
+            self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(
+                labels=tf.one_hot(self.y, depth=num_classes), logits=x))
+            self.output = tf.argmax(x, axis=-1)
+            
         self.train_op = tf.train.AdamOptimizer(learning_rate).minimize(self.loss)
-        self.output = tf.argmax(x, axis=-1)
 
     def relu(self, x):
         return tf.nn.relu(x)
@@ -73,20 +77,14 @@ class AlexNet(object):
         x = tf.layers.dropout(x, rate=rate)
         return x
 
-    def conv2d(self, x, filters, kernel_size, strides, padding='same',
-               split=False):
-        if split:
-            x_up, x_down = tf.split(value=x, axis=-1, num_or_size_splits=2)
-            x_up = self.conv2d(x_up, filters // 2, kernel_size, strides, padding)
-            x_down = self.conv2d(x_down, filters // 2, kernel_size, strides, padding)
-            x = tf.concat(values=[x_up, x_down], axis=-1)
-        else:
-            x = tf.layers.conv2d(
-                inputs=x,
-                filters=filters,
-                kernel_size=kernel_size,
-                strides=strides,
-                padding=padding)
+    def conv2d(self, x, filters, kernel_size, strides, name, padding='same'):
+        x = tf.layers.conv2d(
+            inputs=x,
+            filters=filters,
+            kernel_size=kernel_size,
+            strides=strides,
+            padding=padding,
+            name=name)
         return x
 
     def build(self):
