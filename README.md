@@ -17,3 +17,22 @@ $ python -m alexnet.main
 |AlexNet-4         |0.7558   |0.8178           |
 |AlexNet-4+LRN     |0.7452   |0.8150           |
 |AlexNet-3+OP      |0.7664   |0.7848           |
+
+
+## First layer visualization
+
+Visualization of first layer convolution kernel size: 96x7x7
+
+```shell
+$ python -m alexnet.viz_kernel --model checkpoint/model2_checkpoint.ckpt
+```
+
+![](images/model2.png?raw=true)
+
+Visualization of first layer convolution kernel size: 96x11x11
+
+```shell
+$ python -m alexnet.viz_kernel --model checkpoint/model_checkpoint.ckpt
+```
+
+![](images/model1.png?raw=true)
